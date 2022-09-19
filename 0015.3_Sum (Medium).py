@@ -32,55 +32,33 @@ Explanation: The only possible triplet sums up to 0.
 Constraints:
 
 3 <= nums.length <= 3000
--105 <= nums[i] <= 105'''
+-10**5 <= nums[i] <= 10**5'''
 
+import itertools as it
+import random as rnd
 
 class Solution(object):
+    def three_sum(self, nums: list[int]) -> list[list[int]]:
+        MIN_LEN_ARRAY, MAX_LEN_ARRAY = 3, 10**5
+        MIN_VAL_EL, MAX_VAL_EL = -10**5, 10**5
+        assert MIN_LEN_ARRAY <= len(nums) <= MAX_LEN_ARRAY + 1
+        assert min(nums) >= MIN_VAL_EL and max(nums) <= MAX_VAL_EL
 
-    def twoSum(self, nums: list[int], target: int) -> list[int]:
-        """
-        Return indices of the two numbers of an input array, that they add
-        up to target. Complexity - O(n)
-        Constraints: 2 <= len(nums) <= 1e4; -1e9 <= nums[i] <= 1e9;
-        -1e9 <= target <= 1e9; only one valid answer exists.
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[int]
-        """
-
-        dict_diff_idx = dict()
-        for idx_num, val_num in enumerate(nums):  # O(n)
-            diff_to_target = target - val_num
-            if not dict_diff_idx:  # if dict still empty
-                dict_diff_idx[diff_to_target] = idx_num
-                continue
-            # if in dict already exists difference to target
-            if val_num in dict_diff_idx:  # O(1)
-                # returned two idx of two nums for target sum
-                return [dict_diff_idx[val_num], idx_num]
-            # save new element [different_to target]: idx for current num
-            dict_diff_idx[diff_to_target] = idx_num
-
-        # something wrong - return empty list
-        return [0, 0]
+        uniq_tripl_idx = it.combinations((idx for idx in range(len(nums))), 3)
+        uniq_tripl_val = {tuple(sorted([nums[idx1], nums[idx2], nums[idx3]]))
+                          for idx1, idx2, idx3 in uniq_tripl_idx
+                          if nums[idx1] + nums[idx2] + nums[idx3] == 0}
+        res = [list(curr_tripl) for curr_tripl in uniq_tripl_val]
+        return res
 
 
 if __name__ == '__main__':
+    # nums = [-1, 0, 1, 2, -1, -4]
+    # nums = [0, 1, 1]
+    # nums = [0, 0, 0]
+    nums = [rnd.randint(-100000, 100001) for _ in range(200)]
+    print(f'{len(nums)=}, {nums=}')
 
-    from time import time
-    from random import randrange
-
-    # tst_arr = [randrange(-10000, 10000) for _ in range(2000)]
-    tst_arr = [2, 7, 11, 15]
-    target = 9
     tst = Solution
-    time_start = time()
-    idx_num1, idx_num2 = tst.twoSum(tst, tst_arr, target)
-    if idx_num1 or idx_num2:
-        print(f'Sum of two elements (for {target=}): '
-              f'nums[{idx_num1}]={tst_arr[idx_num1]} + '
-              f'nums[{idx_num2}]={tst_arr[idx_num2]} = '
-              f'{tst_arr[idx_num1] + tst_arr[idx_num2]}')
-        print(f'Time for calculate: {(time() - time_start):f} sec.')
-    else:
-        print('Something wrong - two nums for sum target not finded!')
+    res = tst.three_sum(tst, nums)
+    print(f'{len(res)=}, {res=}')
