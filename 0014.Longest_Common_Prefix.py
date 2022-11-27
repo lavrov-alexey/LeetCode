@@ -22,20 +22,30 @@ class Solution:
     def longestCommonPrefix(self, strs: list[str]) -> str:
 
         # find min lenght of str in strs
-        min_len_str = 0
-        for el in strs:
-            if len(el) > min_len_str:
-                min_len_str = len(el)
+        min_len_str = len(strs[0])
+        for curr_str in strs:
+            if len(curr_str) < min_len_str:
+                min_len_str = len(curr_str)
+        if min_len_str == 0:
+            return ""
 
+        common_prefix = ""
         for idx in range(0, min_len_str):
-            
-
-        return res
+            curr_char = strs[0][idx]  # get idx's char of first str
+            is_not_all_eqw_char = False
+            for curr_str in strs:
+                if curr_str[idx] != curr_char:
+                    is_not_all_eqw_char = True
+                    break
+                # print(f'{curr_str=}, {idx=}, {curr_char=}, {curr_str[idx]=}')
+            if is_not_all_eqw_char:  # current char is'nt part of common prefix
+                return common_prefix
+            common_prefix += curr_char
+        return common_prefix
 
 
 if __name__ == '__main__':
-    strs = ["flower", "flow", "flight"]
-
+    words_array = ["flower", "flow", "flight"]  # first test case
     tst = Solution
-    res = tst.longestCommonPrefix(strs)
+    res = tst.longestCommonPrefix(tst, words_array)
     print(res)
